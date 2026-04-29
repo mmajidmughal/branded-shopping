@@ -1,0 +1,47 @@
+{
+  "categories": [
+    { "name": "Apparel", "slug": "apparel", "description": "High-end clothing and streetwear." },
+    { "name": "Accessories", "slug": "accessories", "description": "Luxury watches, bags, and jewelry." },
+    { "name": "Footwear", "slug": "footwear", "description": "Premium sneakers and designer shoes." }
+  ],
+  "brands": [
+    { "name": "Aura Luxury", "slug": "aura-luxury", "description": "Minimalist aesthetics for the modern professional." },
+    { "name": "Vertex Streetwear", "slug": "vertex-streetwear", "description": "Urban style meets premium quality." },
+    { "name": "Chronos Watches", "slug": "chronos-watches", "description": "Timeless craftsmanship for the discerning wrist." }
+  ],
+  "products": [
+    {
+      "name": "Midnight Wool Overcoat",
+      "slug": "midnight-wool-overcoat",
+      "description": "A tailored overcoat made from 100% sustainably sourced Merino wool.",
+      "price": 850.00,
+      "stock_quantity": 15,
+      "category_slug": "apparel",
+      "brand_slug": "aura-luxury",
+      "images": ["https://images.unsplash.com/photo-1544022613-e87ca75a784a"],
+      "metadata": { "passport_id": "AL-COAT-001", "origin": "Italy", "material": "Merino Wool" }
+    },
+    {
+      "name": "Vertex Graphene Hoodie",
+      "slug": "vertex-graphene-hoodie",
+      "description": "Tech-infused hoodie featuring temperature-regulating graphene lining.",
+      "price": 320.00,
+      "stock_quantity": 45,
+      "category_slug": "apparel",
+      "brand_slug": "vertex-streetwear",
+      "images": ["https://images.unsplash.com/photo-1556821840-3a63f95609a7"],
+      "metadata": { "passport_id": "VS-HUD-042", "origin": "Japan", "tech": "Graphene Infused" }
+    },
+    {
+      "name": "Onyx Diver Watch",
+      "slug": "onyx-diver-watch",
+      "description": "Water-resistant to 300m with a custom mechanical movement.",
+      "price": 1200.00,
+      "stock_quantity": 8,
+      "category_slug": "accessories",
+      "brand_slug": "chronos-watches",
+      "images": ["https://images.unsplash.com/photo-1524592094714-0f0654e20314"],
+      "metadata": { "passport_id": "CW-WATCH-007", "origin": "Switzerland", "movement": "Mechanical" }
+    }
+  ]
+}
