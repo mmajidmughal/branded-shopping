@@ -4,6 +4,8 @@ import { ProductCard } from '@/components/product-card'
 import { ProductGrid } from '@/components/product-grid'
 import { getFeaturedProducts } from '@/services/product-service'
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const products = await getFeaturedProducts(4)
 

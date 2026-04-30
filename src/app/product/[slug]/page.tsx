@@ -4,6 +4,8 @@ import { ShoppingBag, Heart, ShieldCheck, Globe, Truck } from 'lucide-react'
 import { getProductBySlug } from '@/services/product-service'
 import { AddToCartButton } from '@/components/add-to-cart-button'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: {
     slug: string
