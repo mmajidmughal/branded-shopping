@@ -21,14 +21,14 @@ export async function getProductBySlug(slug: string) {
   return data
 }
 
-export async function getCategories() {
+export async function getCategories(): Promise<any[]> {
   const { data, error } = await supabase
     .from('categories')
     .select('*')
     .order('name')
 
   if (error) throw error
-  return data
+  return data || []
 }
 
 export async function getFeaturedProducts(limit = 4) {

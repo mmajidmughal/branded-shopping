@@ -12,17 +12,38 @@ export function Navbar() {
   const router = useRouter()
   const { totalItems, setIsOpen } = useCart()
   const [user, setUser] = useState<any>(null)
+  const [userRole, setUserRole] = useState<string | null>(null)
   const [showUserMenu, setShowUserMenu] = useState(false)
 
   useEffect(() => {
     // Check initial auth state
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       setUser(user)
+      if (user) {
+        // Fetch user role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+        setUserRole(profile?.role || 'user')
+      }
     })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null)
+      if (session?.user) {
+        // Fetch user role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single()
+        setUserRole(profile?.role || 'user')
+      } else {
+        setUserRole(null)
+      }
     })
 
     return () => {
@@ -109,14 +130,16 @@ export function Navbar() {
                     <ShoppingBag className="h-3.5 w-3.5" />
                     My Orders
                   </Link>
-                  <Link 
-                    href="/admin" 
-                    onClick={() => setShowUserMenu(false)}
-                    className="flex items-center gap-2 px-2 py-1.5 text-xs font-medium hover:bg-muted rounded-sm transition-colors"
-                  >
-                    <LayoutDashboard className="h-3.5 w-3.5" />
-                    Admin Dashboard
-                  </Link>
+                  {userRole === 'admin' && (
+                    <Link 
+                      href="/admin" 
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 px-2 py-1.5 text-xs font-medium hover:bg-muted rounded-sm transition-colors"
+                    >
+                      <LayoutDashboard className="h-3.5 w-3.5" />
+                      Admin Dashboard
+                    </Link>
+                  )}
                   <button 
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-2 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10 rounded-sm transition-colors text-left"

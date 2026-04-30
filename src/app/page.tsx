@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { ProductCard } from '@/components/product-card'
+import { ProductGrid } from '@/components/product-grid'
 import { getFeaturedProducts } from '@/services/product-service'
 
 export default async function HomePage() {

@@ -93,20 +93,3 @@ export default function ShopPage() {
     </div>
   )
 }
-s-4 gap-x-8 gap-y-12">
-          {filteredProducts.map((p) => (
-            <ProductCard 
-              key={p.id}
-              id={p.id}
-              name={p.name}
-              slug={p.slug}
-              price={Number(p.price)}
-              brand={p.brands?.name || 'BRANDED'}
-              imageUrl={p.images[0]}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}

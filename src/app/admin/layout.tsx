@@ -28,13 +28,13 @@ export default function AdminLayout({
     }
 
     // Check if user is admin
-    const { data: profile } = await supabase
+    const { data: profile, error } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!profile || profile.role !== 'admin') {
+    if (error || !profile || (profile as any).role !== 'admin') {
       router.push('/')
       return
     }
@@ -80,7 +80,10 @@ export default function AdminLayout({
           ))}
         </nav>
         <div className="p-4 border-t">
-           <button className="flex items-center gap-3 px-3 py-2 w-full text-left text-sm font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors">
+           <button
+             onClick={handleLogout}
+             className="flex items-center gap-3 px-3 py-2 w-full text-left text-sm font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+           >
              <LogOut className="h-4 w-4" />
              Logout
            </button>
