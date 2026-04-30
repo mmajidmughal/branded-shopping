@@ -1,10 +1,8 @@
-'use client'
-
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { ShoppingBag, Heart, ShieldCheck, Globe, Truck } from 'lucide-react'
-import sampleData from '@/lib/sample-data.json'
-import { useCart } from '@/lib/cart-context'
+import { getProductBySlug } from '@/services/product-service'
+import { AddToCartButton } from '@/components/add-to-cart-button'
 
 interface PageProps {
   params: {
@@ -12,23 +10,19 @@ interface PageProps {
   }
 }
 
-export default function ProductPage({ params }: PageProps) {
-  const product = sampleData.products.find((p) => p.slug === params.slug)
-  const { addItem } = useCart()
+export default async function ProductPage({ params }: PageProps) {
+  let product;
+  try {
+    product = await getProductBySlug(params.slug)
+  } catch (err) {
+    notFound()
+  }
 
   if (!product) {
     notFound()
   }
 
-  const handleAddToBag = () => {
-    addItem({
-      id: product.slug,
-      name: product.name,
-      price: product.price,
-      imageUrl: product.images[0],
-      quantity: 1
-    })
-  }
+  const metadata = product.metadata as any;
 
   return (
     <div className="container px-4 md:px-6 py-10 lg:py-20">
@@ -58,12 +52,12 @@ export default function ProductPage({ params }: PageProps) {
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
-              {product.brand_slug.replace('-', ' ')}
+              {(product.brands as any)?.name}
             </p>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
               {product.name}
             </h1>
-            <p className="text-2xl font-semibold mt-2">${product.price.toLocaleString()}</p>
+            <p className="text-2xl font-semibold mt-2">${Number(product.price).toLocaleString()}</p>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -74,13 +68,7 @@ export default function ProductPage({ params }: PageProps) {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <button 
-              onClick={handleAddToBag}
-              className="flex-1 flex h-14 items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground font-medium shadow transition-colors hover:bg-primary/90"
-            >
-              <ShoppingBag className="h-5 w-5" />
-              Add to Bag
-            </button>
+            <AddToCartButton product={product} />
             <button className="flex h-14 w-14 items-center justify-center rounded-md border border-input bg-background shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground">
               <Heart className="h-6 w-6" />
             </button>
@@ -97,23 +85,23 @@ export default function ProductPage({ params }: PageProps) {
                 <span className="text-xs text-muted-foreground uppercase font-semibold">Origin</span>
                 <div className="flex items-center gap-2">
                   <Globe className="h-4 w-4" />
-                  <span className="text-sm font-medium">{product.metadata.origin}</span>
+                  <span className="text-sm font-medium">{metadata?.origin}</span>
                 </div>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-xs text-muted-foreground uppercase font-semibold">Verification ID</span>
-                <span className="text-sm font-mono">{product.metadata.passport_id}</span>
+                <span className="text-sm font-mono">{metadata?.passport_id}</span>
               </div>
-              {product.metadata.material && (
+              {metadata?.material && (
                 <div className="flex flex-col gap-1">
                   <span className="text-xs text-muted-foreground uppercase font-semibold">Material</span>
-                  <span className="text-sm font-medium">{product.metadata.material}</span>
+                  <span className="text-sm font-medium">{metadata?.material}</span>
                 </div>
               )}
-               {product.metadata.movement && (
+               {metadata?.movement && (
                 <div className="flex flex-col gap-1">
                   <span className="text-xs text-muted-foreground uppercase font-semibold">Movement</span>
-                  <span className="text-sm font-medium">{product.metadata.movement}</span>
+                  <span className="text-sm font-medium">{metadata?.movement}</span>
                 </div>
               )}
             </div>

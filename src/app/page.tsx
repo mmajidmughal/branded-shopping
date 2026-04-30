@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import { ArrowRight, Sparkles } from 'lucide-react'
-import { ProductGrid } from '@/components/product-grid'
+import { ProductCard } from '@/components/product-card'
+import { getFeaturedProducts } from '@/services/product-service'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await getFeaturedProducts(4)
+
   return (
     <div className="flex flex-col gap-20 pb-20">
       {/* Hero Section */}
@@ -76,7 +79,7 @@ export default function HomePage() {
           </Link>
         </div>
         
-        <ProductGrid />
+        <ProductGrid products={products} />
       </section>
     </div>
   )

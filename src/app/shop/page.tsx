@@ -1,16 +1,45 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ProductCard } from '@/components/product-card'
-import sampleData from '@/lib/sample-data.json'
+import { getProducts, getCategories } from '@/services/product-service'
 import { SlidersHorizontal, ChevronDown } from 'lucide-react'
 
 export default function ShopPage() {
+  const [products, setProducts] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [productsData, categoriesData] = await Promise.all([
+          getProducts(),
+          getCategories()
+        ])
+        setProducts(productsData)
+        setCategories(categoriesData)
+      } catch (err) {
+        console.error("Failed to load shop data:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
   
   const filteredProducts = selectedCategory === 'All' 
-    ? sampleData.products 
-    : sampleData.products.filter(p => p.category_slug === selectedCategory.toLowerCase())
+    ? products 
+    : products.filter(p => p.categories?.name === selectedCategory)
+
+  if (loading) {
+    return (
+      <div className="container px-4 py-20 text-center">
+        <p className="text-sm font-bold uppercase tracking-widest animate-pulse">Initializing Collection...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="container px-4 md:px-6 py-10">
@@ -24,13 +53,19 @@ export default function ShopPage() {
         {/* Filters Bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-y py-4 gap-4">
           <div className="flex items-center gap-6 text-sm font-medium overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto">
-            {['All', 'Apparel', 'Accessories', 'Footwear'].map((cat) => (
+            <button 
+              onClick={() => setSelectedCategory('All')}
+              className={`transition-colors whitespace-nowrap ${selectedCategory === 'All' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+            >
+              All
+            </button>
+            {categories.map((cat) => (
               <button 
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`transition-colors whitespace-nowrap ${selectedCategory === cat ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.name)}
+                className={`transition-colors whitespace-nowrap ${selectedCategory === cat.name ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
               >
-                {cat}
+                {cat.name}
               </button>
             ))}
           </div>
@@ -53,15 +88,20 @@ export default function ShopPage() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+        <ProductGrid products={filteredProducts} />
+      </div>
+    </div>
+  )
+}
+s-4 gap-x-8 gap-y-12">
           {filteredProducts.map((p) => (
             <ProductCard 
-              key={p.slug}
-              id={p.slug}
+              key={p.id}
+              id={p.id}
               name={p.name}
               slug={p.slug}
-              price={p.price}
-              brand={p.brand_slug.replace('-', ' ').toUpperCase()}
+              price={Number(p.price)}
+              brand={p.brands?.name || 'BRANDED'}
               imageUrl={p.images[0]}
             />
           ))}
