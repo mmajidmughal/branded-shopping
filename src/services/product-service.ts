@@ -41,3 +41,13 @@ export async function getFeaturedProducts(limit = 4) {
   if (error) throw error
   return data
 }
+
+export async function createProduct(productData: any) {
+  const { data, error } = await supabase
+    .from('products')
+    .insert([productData])
+    .select()
+
+  if (error) throw error
+  return data
+}
