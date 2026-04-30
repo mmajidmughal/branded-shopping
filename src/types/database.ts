@@ -63,6 +63,7 @@ export interface Database {
           id: string
           full_name: string | null
           avatar_url: string | null
+          role: string
           preferences: Json
           updated_at: string
         }
@@ -70,6 +71,7 @@ export interface Database {
           id: string
           full_name?: string | null
           avatar_url?: string | null
+          role?: string
           preferences?: Json
           updated_at?: string
         }
@@ -77,6 +79,7 @@ export interface Database {
           id?: string
           full_name?: string | null
           avatar_url?: string | null
+          role?: string
           preferences?: Json
           updated_at?: string
         }

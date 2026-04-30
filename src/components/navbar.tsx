@@ -94,6 +94,22 @@ export function Navbar() {
                     {user.email}
                   </p>
                   <Link 
+                    href="/profile" 
+                    onClick={() => setShowUserMenu(false)}
+                    className="flex items-center gap-2 px-2 py-1.5 text-xs font-medium hover:bg-muted rounded-sm transition-colors"
+                  >
+                    <User className="h-3.5 w-3.5" />
+                    My Profile
+                  </Link>
+                  <Link 
+                    href="/orders" 
+                    onClick={() => setShowUserMenu(false)}
+                    className="flex items-center gap-2 px-2 py-1.5 text-xs font-medium hover:bg-muted rounded-sm transition-colors"
+                  >
+                    <ShoppingBag className="h-3.5 w-3.5" />
+                    My Orders
+                  </Link>
+                  <Link 
                     href="/admin" 
                     onClick={() => setShowUserMenu(false)}
                     className="flex items-center gap-2 px-2 py-1.5 text-xs font-medium hover:bg-muted rounded-sm transition-colors"
